@@ -4,36 +4,34 @@ namespace WebEditor.Tools;
 public sealed class FigureTool : Tool
 {
     public static FigureTool Shared { get; } = new();
-    private Positioned<Figure>? _selected;
+    private Optional<Figure> _selectedFigure = new None<Figure>();
+    private Optional<Position> _originalPosition = new None<Position>();
     public Positioned<Figure>? DraggedFigure { get; private set; }
     private Position _offset = new(0, 0);
 
-    public override void OnStartDragFigure(Board board, Positioned<Figure> figure, Position offset)
+    public override void OnStartDragFigure(Board board, Figure figure, Optional<Position>? start = null, Position? offset = null)
     {
-        _offset = offset;
-        _selected = figure;
-        board.RemoveFigure(figure.Position);
+        _offset = new Position(0, 0);
+        _selectedFigure = figure;
+        _originalPosition = start ?? new None<Position>();
+        _originalPosition.Select(board.RemoveFigure);
     }
 
     public override void OnMouseOver(Board board, Position position)
     {
         base.OnMouseOver(board, position);
-        if (_selected is Positioned<Figure> figure)
-        {
-            DraggedFigure = new(figure.Element, position + _offset);
-        }
+        _selectedFigure.Apply(figure => DraggedFigure = new(figure, position + _offset));
     }
 
     public override void OnMouseUp(Board board, Position endPosition)
     {
-        if (_selected is not null && !board.TryAddFigure(endPosition + _offset, _selected.Element))
-        {
-            if (_selected.Position is not NoPosition)
-            {
-                board.Figures.Add(_selected);
-            }
-        }
-        _selected = null;
+        _selectedFigure
+            .Where(figure => !board.TryAddFigure(endPosition + _offset, figure))
+            .Where(_ => _originalPosition.HasValue())
+            .Apply(figure => board.TryAddFigure(_originalPosition.Value(), figure));
+
+        _selectedFigure = new None<Figure>();
+        _originalPosition = new None<Position>();
         DraggedFigure = null;
     }
 }

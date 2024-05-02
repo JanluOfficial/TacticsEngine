@@ -14,6 +14,6 @@
     private void OnDragStart(MouseEventArgs args, Figure _)
     {
         Position offset = new (-(int)(args.OffsetX / Parent.CellSize), -(int)(args.OffsetY / Parent.CellSize));
-        ToolManager.StartDragFigure(Parent.Board, Figure, offset);
+        ToolManager.StartDragFigure(Parent.Board, Figure.Element, Figure.Position, offset);
     }
 }

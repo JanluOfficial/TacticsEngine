@@ -32,9 +32,9 @@ public class ToolManager
         _tool.OnClickFigure(board, figure);
     }
 
-    public void StartDragFigure(Board board, Positioned<Figure> figure, Position offset)
+    public void StartDragFigure(Board board, Figure figure, Optional<Position>? start = null, Position? offset = null)
     {
-        _tool.OnStartDragFigure(board, figure, offset);
+        _tool.OnStartDragFigure(board, figure, start, offset);
     }
 
     public void MouseUp(Board board, Position position)
