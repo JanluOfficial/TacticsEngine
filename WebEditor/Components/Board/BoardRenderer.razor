@@ -23,7 +23,7 @@
             {
                     <PositionedFigureRenderer Figure="@figure"/>
             }
-            @foreach (Positioned<Figure> target in FigureTool.Shared.DraggedFigure.Yield())
+            @foreach (Positioned<Figure> target in FigureTool.Shared.DraggedFigure)
             {
                 <ElementRenderer Position="@target.Position" IsDragging IsValid="@Board.CanAddFigure(target.Position, target.Element)">
                     <FigureRenderer Figure="@target.Element"/>

@@ -15,6 +15,6 @@
 	[Parameter]
 	public bool IsDragging { get; set; } = false;
 	private string? DraggedElement => IsDragging ? "dragged-element" : null;
-	private string? PositionedElement => Position.Select(_ => "positioned-element").ValueOrDefault();
-	private string? PositionedStyle => Position.Select(position => $"--pos-x:{position.X}; --pos-y:{position.Y}").ValueOrDefault();
+	private string? PositionedElement => Position.Map(_ => "positioned-element").ValueOrDefault();
+	private string? PositionedStyle => Position.Map(position => $"--pos-x:{position.X}; --pos-y:{position.Y}").ValueOrDefault();
 }

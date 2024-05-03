@@ -15,7 +15,7 @@
     [Parameter, EditorRequired, AllowNull]
     public Figure Figure { get; set; }
     private bool _dragStarted = false;
-    public bool IsDragging => _dragStarted || FigureTool.Shared.DraggedFigure.HasValue();
+    public bool IsDragging => _dragStarted || FigureTool.Shared.DraggedFigure.IsSome();
     private bool _mouseDown = false;
     [Parameter]
     public Action<MouseEventArgs, Figure>? OnDragStart { get; set; }

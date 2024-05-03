@@ -1,3 +1,4 @@
+using CaptainCoder.Functional;
 using CaptainCoder.TacticsEngine.Board;
 
 namespace WebEditor.Tools;
@@ -14,21 +15,21 @@ public sealed class FigureTool : Tool
         _offset = new Position(0, 0);
         _selectedFigure = figure;
         _originalPosition = start ?? new None<Position>();
-        _ = _originalPosition.Select(board.RemoveFigure);
+        _originalPosition.Invoke(board.RemoveFigure);
     }
 
     public override void OnMouseOver(Board board, Position position)
     {
         base.OnMouseOver(board, position);
-        DraggedFigure = _selectedFigure.Select(figure => new Positioned<Figure>(figure, position + _offset));
+        DraggedFigure = _selectedFigure.Map(figure => new Positioned<Figure>(figure, position + _offset));
     }
 
     public override void OnMouseUp(Board board, Position endPosition)
     {
         _selectedFigure
-            .Where(figure => !board.TryAddFigure(endPosition + _offset, figure))
-            .SelectMany(figure => _originalPosition.Select(position => new Positioned<Figure>(figure, position)))
-            .Apply(board.Figures.Add);
+            .Filter(figure => !board.TryAddFigure(endPosition + _offset, figure))
+            .FlatMap(figure => _originalPosition.Map(position => new Positioned<Figure>(figure, position)))
+            .Invoke(board.Figures.Add);
 
         _selectedFigure = new None<Figure>();
         _originalPosition = new None<Position>();

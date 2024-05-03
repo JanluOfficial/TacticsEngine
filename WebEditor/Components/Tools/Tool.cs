@@ -1,3 +1,4 @@
+using CaptainCoder.Functional;
 using CaptainCoder.TacticsEngine.Board;
 
 namespace WebEditor.Tools;
