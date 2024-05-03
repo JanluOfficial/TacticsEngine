@@ -10,20 +10,20 @@
     class="board-container" 
     style="--cell-size: @(CellSize)px; --board-width: @Width; --board-height: @Height;"
     @ondragstart="@(() => {})" 
-    @ondragstart:stopPropagation
-    @ondragstart:preventDefault
+@ondragstart:stopPropagation
+@ondragstart:preventDefault
     @onmouseup="@(() => ToolManager.MouseUp(Board, _mousePosition))">
     <CascadingValue Value="@Board">
         <CascadingValue Value="@this">
             @foreach (Position position in Positions)
             {
-                <TileRenderer @key="@position" Position="@position" OnMouseEnter="@(() => MouseEnter(@position))" />
+                    <TileRenderer @key="@position" Position="@position" OnMouseEnter="@(() => MouseEnter(@position))" />
             }
             @foreach (Positioned<Figure> figure in Board.Figures)
             {
-                <PositionedFigureRenderer Figure="@figure"/>
+                    <PositionedFigureRenderer Figure="@figure"/>
             }
-            @if (FigureTool.Shared.DraggedFigure is Positioned<Figure> target)
+            @foreach (Positioned<Figure> target in FigureTool.Shared.DraggedFigure.Yield())
             {
                 <ElementRenderer Position="@target.Position" IsDragging IsValid="@Board.CanAddFigure(target.Position, target.Element)">
                     <FigureRenderer Figure="@target.Element"/>

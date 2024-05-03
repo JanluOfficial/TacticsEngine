@@ -6,7 +6,7 @@ public sealed class FigureTool : Tool
     public static FigureTool Shared { get; } = new();
     private Optional<Figure> _selectedFigure = new None<Figure>();
     private Optional<Position> _originalPosition = new None<Position>();
-    public Positioned<Figure>? DraggedFigure { get; private set; }
+    public Optional<Positioned<Figure>> DraggedFigure { get; private set; } = new None<Positioned<Figure>>();
     private Position _offset = new(0, 0);
 
     public override void OnStartDragFigure(Board board, Figure figure, Optional<Position>? start = null, Position? offset = null)
@@ -14,13 +14,13 @@ public sealed class FigureTool : Tool
         _offset = new Position(0, 0);
         _selectedFigure = figure;
         _originalPosition = start ?? new None<Position>();
-        _originalPosition.Select(board.RemoveFigure);
+        _ = _originalPosition.Select(board.RemoveFigure);
     }
 
     public override void OnMouseOver(Board board, Position position)
     {
         base.OnMouseOver(board, position);
-        _selectedFigure.Apply(figure => DraggedFigure = new(figure, position + _offset));
+        DraggedFigure = _selectedFigure.Select(figure => new Positioned<Figure>(figure, position + _offset));
     }
 
     public override void OnMouseUp(Board board, Position endPosition)
@@ -32,6 +32,6 @@ public sealed class FigureTool : Tool
 
         _selectedFigure = new None<Figure>();
         _originalPosition = new None<Position>();
-        DraggedFigure = null;
+        DraggedFigure = new None<Positioned<Figure>>();
     }
 }

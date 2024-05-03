@@ -12,6 +12,12 @@ public static class OptionalExtensions
 
     public static bool HasValue<T>(this Optional<T> optional) => optional is Some<T>;
 
+    public static IEnumerable<T> Yield<T>(this Optional<T> optional) => optional switch
+    {
+        Some<T>(T value) => [value],
+        _ => [],
+    };
+
     public static T Value<T>(this Optional<T> optional) => optional switch
     {
         Some<T>(T val) => val,
