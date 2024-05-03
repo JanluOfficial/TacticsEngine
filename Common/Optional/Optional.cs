@@ -35,6 +35,12 @@ public static class OptionalExtensions
         _ => None<ReturnVal>(),
     };
 
+    public static Optional<ReturnVal> SelectMany<TVal, ReturnVal>(this Optional<TVal> optional, Func<TVal, Optional<ReturnVal>> toApply) => optional switch
+    {
+        Some<TVal>(TVal value) => toApply.Invoke(value),
+        _ => None<ReturnVal>(),
+    };
+
     public static T ValueOr<T>(this Optional<T> optional, T @default) => optional switch
     {
         Some<T>(T value) => value,

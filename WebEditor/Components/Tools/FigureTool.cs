@@ -27,8 +27,8 @@ public sealed class FigureTool : Tool
     {
         _selectedFigure
             .Where(figure => !board.TryAddFigure(endPosition + _offset, figure))
-            .Where(_ => _originalPosition.HasValue())
-            .Apply(figure => board.TryAddFigure(_originalPosition.Value(), figure));
+            .SelectMany(figure => _originalPosition.Select(position => new Positioned<Figure>(figure, position)))
+            .Apply(board.Figures.Add);
 
         _selectedFigure = new None<Figure>();
         _originalPosition = new None<Position>();
